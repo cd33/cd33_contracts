@@ -1,0 +1,8 @@
+{
+  "name": "cd33_contracts",
+  "dependencies": {
+    "@chainlink/contracts": "^0.4.1",
+    "@openzeppelin/contracts": "^4.7.3",
+    "hardhat-gas-reporter": "^1.0.8"
+  }
+}
