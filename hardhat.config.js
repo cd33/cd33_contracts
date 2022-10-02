@@ -1,6 +1,5 @@
 require('dotenv').config()
 require('@nomiclabs/hardhat-waffle')
-require('hardhat-contract-sizer')
 require("@nomiclabs/hardhat-etherscan")
 require("hardhat-gas-reporter")
 
@@ -25,20 +24,20 @@ module.exports = {
       chainId: 31337,
       allowUnlimitedContractSize: true
     },
-    rinkeby: {
-      url: process.env.INFURA,
-      accounts: [process.env.PRIVATE_KEY],
-    },
-    bsctestnet: {
-      url: "https://data-seed-prebsc-1-s1.binance.org:8545",
-      chainId: 97,
-      gasPrice: 20000000000,
-      accounts: [process.env.PRIVATE_KEY]
-    },
+    // rinkeby: {
+    //   url: process.env.INFURA,
+    //   accounts: [process.env.PRIVATE_KEY],
+    // },
+  //   bsctestnet: {
+  //     url: "https://data-seed-prebsc-1-s1.binance.org:8545",
+  //     chainId: 97,
+  //     gasPrice: 20000000000,
+  //     accounts: [process.env.PRIVATE_KEY]
+  //   },
   },
-  etherscan: {
-    apiKey: process.env.ETHERSCAN
-  },
+  // etherscan: {
+  //   apiKey: process.env.ETHERSCAN
+  // },
   gasReporter: {
     currency: 'EUR',
     gasPrice: 21,

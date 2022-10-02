@@ -1,17 +1,14 @@
 # cd33_contracts
-## En cours de développement / Under development
-Attention ! les contracts sont en phase de developpement, ils n'ont pas encore été testés  
-  
-Warning ! The contracts are in the development phase, they have not yet been tested
-
 ## Description
-Suite de contracts développé par mes soins, que j'espère utile pour d'autres développeurs  
-  
-Contract suite developed by me, which I hope will be useful for other developers
+* Suite de contracts développé par mes soins, que j'espère utile pour d'autres développeurs  
+* Contract suite developed by me, which I hope will be useful for other developers
 
-## !!! TODO !!!
-* Vesting ERC721 & ERC1155
-* TESTS DE CHACUN (classics and security)
+## En cours de développement / Under development
+* Attention ! Les contracts sont en phase de developpement, ils n'ont pas encore tous été testés  
+* Warning ! The contracts are in the development phase, they have not yet all been tested
+
+## TODO
+* TESTS DE CHAQUE CONTRAT (classics and security)
 
 ## ERC721A
 * Whitelist/merkleTree
@@ -42,8 +39,10 @@ Pour comprendre la logique, regardez cette [série de vidéo](https://www.youtub
 To understand the logic, watch this [video series](https://www.youtube.com/watch?v=6ZO5aYg1GI8)
 
 ## Vesting ERC721 & ERC1155
-* Todo
-
+* Réalisé à partir du [contrat de Rowlanja](https://github.com/rowlanja/NE-staking-system/blob/main/contracts/Staking-System-Optimized.sol)  
+Contrat de staking de ERC1155 et ERC721 avec système de récompense en ERC20
+* Based on the [Rowlanja contract](https://github.com/rowlanja/NE-staking-system/blob/main/contracts/Staking-System-Optimized.sol)  
+Staking contract of ERC1155 and ERC721 with reward system in ERC20
 ## Affiliation "Uni-level"
 * Dans cet exemple, la fonction de mint prend une adresse en paramètre, si c'est l'address(0) => mint classique, sinon, on incremente le compteur referredCount (nombre de nft acheté par les filleuls) de l'adresse.  
 Lorsque l'utilisateur arrive à un certain nombre de referredCount, il peut appeler la fonction claimReward pour obtenir une récompense.  

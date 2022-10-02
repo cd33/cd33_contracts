@@ -39,9 +39,7 @@ contract StartMining721 is ERC721, Ownable, ReentrancyGuard {
      * @notice Constructor of the contract ERC721.
      * @param _baseURI Metadatas for the ERC721.
      */
-    constructor(string memory _baseURI)
-        ERC721("Start Mining", "SMI")
-    {
+    constructor(string memory _baseURI) ERC721("Start Mining", "SMI") {
         baseURI = _baseURI;
     }
 
@@ -99,7 +97,6 @@ contract StartMining721 is ERC721, Ownable, ReentrancyGuard {
         baseURI = _newBaseURI;
     }
 
-    // MINTS
     /**
      * @notice Private function to mint during the sale.
      * @param _to Address that will receive the NFT.
@@ -127,10 +124,7 @@ contract StartMining721 is ERC721, Ownable, ReentrancyGuard {
     {
         require(_amount > 0, "Amount min 1");
         require(_referral != msg.sender, "Not allowed to self-referral");
-        require(
-            msg.value >= salePrice,
-            "Not enough funds"
-        );
+        require(msg.value >= salePrice, "Not enough funds");
         payable(recipient).transfer(address(this).balance);
         for (uint16 i = 0; i < _amount; i++) {
             _mintSale(msg.sender, _referral);
