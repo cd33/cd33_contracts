@@ -11,7 +11,7 @@ async function main() {
   const tree = new MerkleTree(leaves, keccak256, { sort: true })
   const root = tree.getHexRoot()
 
-  const leaf = keccak256("0xdB4D6160532835f8Be98f3682eD165D5Ce02ECf9")
+  const leaf = keccak256("XXX")
   const proof = tree.getHexProof(leaf)
 
   console.log("root: ", root)

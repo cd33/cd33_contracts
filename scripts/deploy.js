@@ -15,7 +15,7 @@ async function main() {
   const Bibs721A = await hre.ethers.getContractFactory('Bibs721A')
   const bibs721A = await Bibs721A.deploy(
     root,
-    'ipfs://QmYkpa28u51JFnCjrnoaMf1LfyNiB9n5oSp6ERRQCX5eKE/',
+    'ipfs://XXX/',
   )
   await bibs721A.deployed()
   console.log('Bibs721A deployed to:', bibs721A.address)
