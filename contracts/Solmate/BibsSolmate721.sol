@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 // import "hardhat/console.sol";
 
-/// @title StartMining NFTs Collection
+/// @title Solmate721 NFTs Collection
 /// @author cd33
 contract BibsSolmate721 is ERC721, Ownable, ReentrancyGuard {
     using Strings for uint256;
@@ -38,7 +38,7 @@ contract BibsSolmate721 is ERC721, Ownable, ReentrancyGuard {
      * @param _baseURI Metadatas for the ERC721.
      */
     constructor(string memory _baseURI)
-        ERC721("Start Mining", "SMI")
+        ERC721("Solmate721", "SME")
     {
         baseURI = _baseURI;
     }

@@ -20,7 +20,7 @@ describe('Bibs721A', function () {
   publicSaleLimitBalance = 4
 
   beforeEach(async function () {
-    [owner, investor, listedInvestor] = await ethers.getSigners() // 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266, 0x70997970C51812dc3A010C7d01b50e0d17dc79C8 et 0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc
+    ;[owner, investor, listedInvestor] = await ethers.getSigners() // 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266, 0x70997970C51812dc3A010C7d01b50e0d17dc79C8 et 0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc
     Bibs721A = await ethers.getContractFactory('Bibs721A')
     bibs = await Bibs721A.deploy(merkleRoot, baseURI)
     await bibs.deployed()
@@ -36,11 +36,12 @@ describe('Bibs721A', function () {
         value: ethers.utils.parseEther('10'),
       }),
     ).to.be.revertedWith('Only if you mint'),
-
-    balanceOwnerETHAfter = await ethers.provider.getBalance(owner.address)
+      (balanceOwnerETHAfter = await ethers.provider.getBalance(owner.address))
     balanceContractETHAfter = await ethers.provider.getBalance(bibs.address)
     expect(balanceOwnerETHBefore).to.equal(balanceOwnerETHAfter)
-    expect(balanceContractETHAfter).to.equal(balanceContractETHAfter).to.equal(0)
+    expect(balanceContractETHAfter)
+      .to.equal(balanceContractETHAfter)
+      .to.equal(0)
   })
 
   it('SetStep setStep() Changements de steps sellingStep()', async function () {
@@ -148,7 +149,9 @@ describe('Bibs721A', function () {
       value: whitelistSalePrice,
     })
     tokenUri = await bibs.connect(investor).tokenURI(0)
-    expect(tokenUri).to.be.equal("ipfs://QmXezwmuWWwuQDUFzWuMyfv63KWdbzsk517BCgWWhe9AXX/0.json")
+    expect(tokenUri).to.be.equal(
+      'ipfs://QmXezwmuWWwuQDUFzWuMyfv63KWdbzsk517BCgWWhe9AXX/0.json',
+    )
   })
 
   // WHITELIST
@@ -157,7 +160,9 @@ describe('Bibs721A', function () {
     balanceOwnerNFT = await bibs.balanceOf(owner.address)
     expect(balanceOwnerNFT).to.equal(0)
     balanceOwnerETHBefore = await ethers.provider.getBalance(owner.address)
-    balanceInvestorETHBefore = await ethers.provider.getBalance(investor.address)
+    balanceInvestorETHBefore = await ethers.provider.getBalance(
+      investor.address,
+    )
 
     mint = await bibs.whitelistSaleMint(1, proofOwner, {
       value: whitelistSalePrice,
@@ -180,7 +185,9 @@ describe('Bibs721A', function () {
 
   it('REVERT: publicSaleMint() Quantity must be greater than 0', async function () {
     await bibs.setStep(1)
-    await expect(bibs.whitelistSaleMint(0, proofOwner)).to.be.revertedWith('MintZeroQuantity()')
+    await expect(bibs.whitelistSaleMint(0, proofOwner)).to.be.revertedWith(
+      'MintZeroQuantity()',
+    )
   })
 
   it('REVERT: whitelistSaleMint() merkle access Not whitelisted', async function () {
@@ -218,7 +225,9 @@ describe('Bibs721A', function () {
     balanceOwnerNFT = await bibs.balanceOf(owner.address)
     expect(balanceOwnerNFT).to.equal(0)
     balanceOwnerETHBefore = await ethers.provider.getBalance(owner.address)
-    balanceInvestorETHBefore = await ethers.provider.getBalance(investor.address)
+    balanceInvestorETHBefore = await ethers.provider.getBalance(
+      investor.address,
+    )
 
     mint = await bibs.publicSaleMint(3, {
       value: (3 * publicSalePrice).toString(),
@@ -241,7 +250,9 @@ describe('Bibs721A', function () {
 
   it('REVERT: publicSaleMint() Quantity must be greater than 0', async function () {
     await bibs.setStep(2)
-    await expect(bibs.publicSaleMint(0)).to.be.revertedWith('MintZeroQuantity()')
+    await expect(bibs.publicSaleMint(0)).to.be.revertedWith(
+      'MintZeroQuantity()',
+    )
   })
 
   // it('REVERT: publicSaleMint() Sold out et tests de balances', async function () {

@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 
 /// @title Affiliation ERC721 Example
 /// @author cd33
-contract StartMining721 is ERC721, Ownable, ReentrancyGuard {
+contract Affiliation is ERC721, Ownable, ReentrancyGuard {
     using Strings for uint256;
 
     address private constant recipient =
@@ -23,7 +23,7 @@ contract StartMining721 is ERC721, Ownable, ReentrancyGuard {
 
     uint256 public salePrice = 0.001 ether;
     uint256 public nextNFT;
-    uint256 public limitNFT = 5000;
+    uint256 public limitNFT = 2500;
 
     string public baseURI;
 
@@ -39,7 +39,7 @@ contract StartMining721 is ERC721, Ownable, ReentrancyGuard {
      * @notice Constructor of the contract ERC721.
      * @param _baseURI Metadatas for the ERC721.
      */
-    constructor(string memory _baseURI) ERC721("Start Mining", "SMI") {
+    constructor(string memory _baseURI) ERC721("Affiliation", "REF") {
         baseURI = _baseURI;
     }
 

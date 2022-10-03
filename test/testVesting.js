@@ -498,9 +498,9 @@ describe('Testing Staking System', function () {
       expect(erc271Balance).to.equal(11)
 
       await landContract.connect(accounts[1]).publicSaleMint(20)
-      await expect(stakingContract.batchStakeERC721([20, 3])).to.be.revertedWith(
-        'Account doesnt own token',
-      )
+      await expect(
+        stakingContract.batchStakeERC721([20, 3]),
+      ).to.be.revertedWith('Account doesnt own token')
       await expect(
         stakingContract.batchStakeERC1155([0, 2], [5, 5]),
       ).to.be.revertedWith('Account have less token')

@@ -205,9 +205,11 @@ describe('Bibs721', function () {
 
   it('ReleaseAll PaymentSplitter', async function () {
     await bibs.setStep(1)
-    await bibs.connect(listedInvestor).whitelistSaleMint(2, proofListedInvestor, {
-      value: (2 * whitelistSalePrice).toString(),
-    })
+    await bibs
+      .connect(listedInvestor)
+      .whitelistSaleMint(2, proofListedInvestor, {
+        value: (2 * whitelistSalePrice).toString(),
+      })
 
     balanceOwnerETHBefore = await ethers.provider.getBalance(owner.address)
     balanceContractETHBefore = await ethers.provider.getBalance(bibs.address)
@@ -231,8 +233,7 @@ describe('Bibs721', function () {
         value: ethers.utils.parseEther('10'),
       }),
     ).to.be.revertedWith('Only if you mint'),
-    
-    balanceOwnerETHAfter = await ethers.provider.getBalance(owner.address)
+      (balanceOwnerETHAfter = await ethers.provider.getBalance(owner.address))
     balanceContractETHAfter = await ethers.provider.getBalance(bibs.address)
     expect(balanceOwnerETHBefore).to.equal(balanceOwnerETHAfter)
     expect(balanceContractETHBefore)

@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 /// @title Staking ERC20, Pool BIBS/BIBS
 /// @author cd33
-contract WarenStakingERC20 is Ownable, ReentrancyGuard {
+contract StakingERC20 is Ownable, ReentrancyGuard {
     using SafeERC20 for Bibscoin20;
     Bibscoin20 public immutable stakingAndRewardsToken;
 
