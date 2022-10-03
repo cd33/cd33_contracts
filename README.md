@@ -8,7 +8,7 @@
 
 ## Staking ERC20 DEFI
 * Réalisé à partir du [contrat de Synthetix](https://github.com/Synthetixio/synthetix/blob/develop/contracts/StakingRewards.sol)  
-Pour comprendre la logique, regardez cette [série de vidéo](https://www.youtube.com/watch?v=6ZO5aYg1GI8)
+Pour comprendre la logique, lisez [mon article](https://cd33.medium.com/defi-staking-rewards-synthetix-64f2e691d718)
 ----------------
 * Based on the [Synthetix contract](https://github.com/Synthetixio/synthetix/blob/develop/contracts/StakingRewards.sol)  
 To understand the logic, watch this [video series](https://www.youtube.com/watch?v=6ZO5aYg1GI8)
