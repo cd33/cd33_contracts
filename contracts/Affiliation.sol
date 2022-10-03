@@ -23,7 +23,7 @@ contract Affiliation is ERC721, Ownable, ReentrancyGuard {
 
     uint256 public salePrice = 0.001 ether;
     uint256 public nextNFT;
-    uint256 public limitNFT = 2500;
+    uint256 public constant limitNFT = 2500;
 
     string public baseURI;
 

@@ -22,10 +22,10 @@ contract Bibs721A is Ownable, ERC721A, IERC2981 {
     }
     Step public sellingStep;
 
-    uint8 public whitelistLimitBalance = 2;
-    uint16 public MAX_SUPPLY = 6530;
-    uint256 public whitelistSalePrice = 0.00015 ether;
-    uint256 public publicSalePrice = 0.0002 ether;
+    uint8 public constant whitelistLimitBalance = 2;
+    uint16 public constant MAX_SUPPLY = 6530;
+    uint256 public constant whitelistSalePrice = 0.00015 ether;
+    uint256 public constant publicSalePrice = 0.0002 ether;
 
     string private baseURI;
 

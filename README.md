@@ -1,29 +1,9 @@
 # cd33_contracts
 ## Description
 * Suite de contracts développé par mes soins, que j'espère utile pour d'autres développeurs  
-* Contract suite developed by me, which I hope will be useful for other developers
-
-## ERC721A
-* Whitelist/merkleTree
-* IERC2981
-
-## ERC721
-* Solmate
-  - Initialize a new collection
-  - ReentrancyGuard
-  - Pausable
-* Classic
-  - Whitelist/merkleTree
-  - IERC2981
-  - PaymentSplitter
-
-## ERC1155 Solmate and Classic
-* Whitelist/merkleTree
-* Purchase in USDT
-* Chainlink
-
-## ERC20
-* Burnable
+**Si vous souhaitez m'aider/encourager, n'hésitez pas à mettre une étoile à ce repo et suivre le profil, merci d'avance !**
+* Contract suite developed by me, which I hope will be useful for other developers  
+**If you want to help/encourage me, feel free to put a star to this repo and follow the profile, thanks in advance !**
 
 ## Staking ERC20 DEFI
 * Réalisé à partir du [contrat de Synthetix](https://github.com/Synthetixio/synthetix/blob/develop/contracts/StakingRewards.sol)  
@@ -48,3 +28,25 @@ When the user reaches a certain number of referredCount, he can call the claimRe
   - First level (between 1 and 100): the affiliate can claim 1 NFT when his affiliates have bought 100  
   - Second tier (Between 100 and 1000): the affiliate can claim 1 NFT for every 34 NFTs purchased by the affiliates (100/3 = 33.33 rounded up to 34)  
   - Third level (From 1001): the affiliate can claim 1 NFT for every 20 NFTs purchased by affiliates (100/5 = 20)
+  
+## ERC721A
+* Whitelist/merkleTree
+* IERC2981
+
+## ERC721
+* Solmate
+  - Initialize a new collection
+  - ReentrancyGuard
+  - Pausable
+* Classic
+  - Whitelist/merkleTree
+  - IERC2981
+  - PaymentSplitter
+
+## ERC1155 Solmate and Classic
+* Whitelist/merkleTree
+* Purchase in USDT
+* Chainlink
+
+## ERC20
+* Burnable

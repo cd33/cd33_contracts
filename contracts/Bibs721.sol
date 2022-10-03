@@ -20,11 +20,11 @@ contract Bibs721 is ERC721, Ownable, IERC2981, PaymentSplitter {
     }
     Step public sellingStep;
 
-    uint8 public whitelistLimitBalance = 2;
-    uint16 public MAX_SUPPLY = 6530;
+    uint8 public constant whitelistLimitBalance = 2;
+    uint16 public constant MAX_SUPPLY = 6530;
     uint16 public nextNFT;
-    uint256 public whitelistSalePrice = 0.01 ether;
-    uint256 public publicSalePrice = 0.02 ether;
+    uint256 public constant whitelistSalePrice = 0.01 ether;
+    uint256 public constant publicSalePrice = 0.02 ether;
 
     string private baseURI;
 

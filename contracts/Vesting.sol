@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.7;
 
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
@@ -18,7 +18,7 @@ contract Vesting is Ownable, ERC721Holder, ReentrancyGuard, Pausable {
     IERC721 public land;
     IERC1155 public items;
 
-    uint256 public stakingPeriod = 1 seconds;
+    uint256 public constant stakingPeriod = 1 seconds;
     uint256 public stakingMinimum = 0 days;
     uint256 public stakingUnlock = 0 days;
     uint256 constant token = 10e18;
@@ -69,6 +69,12 @@ contract Vesting is Ownable, ERC721Holder, ReentrancyGuard, Pausable {
     /// @notice Allows reward tokens to be claimed
     event ClaimableStatusUpdated(bool status);
 
+    /// @notice Allows reward tokens to be claimed
+    event StakingMinimumUpdated(uint256 period);
+
+    /// @notice Allows reward tokens to be claimed
+    event StakingUnlockUpdated(uint256 period);
+
     function setPause() external onlyOwner {
         if (paused() == true) {
             _unpause();
@@ -77,49 +83,19 @@ contract Vesting is Ownable, ERC721Holder, ReentrancyGuard, Pausable {
         }
     }
 
-    function setTokensClaimable(bool _enabled) external onlyOwner {
-        tokensClaimable = _enabled;
-        emit ClaimableStatusUpdated(_enabled);
+    function setTokensClaimable() external onlyOwner {
+        tokensClaimable = !tokensClaimable;
+        emit ClaimableStatusUpdated(tokensClaimable);
     }
 
     function setMinimumStakingPeriod(uint256 _period) external onlyOwner {
         stakingMinimum = _period;
+        emit StakingMinimumUpdated(stakingMinimum);
     }
 
     function setUnlockPeriod(uint256 _period) external onlyOwner {
         stakingUnlock = _period;
-    }
-
-    function GetStakedERC721(address _user, uint256 _tokenId)
-        external
-        view
-        returns (ItemInfo memory)
-    {
-        return stakers[_user].token[_tokenId];
-    }
-
-    function GetStakedERC1155(address _user, uint256 _tokenId)
-        external
-        view
-        returns (ItemInfo[] memory)
-    {
-        return stakers[_user].multiToken[_tokenId];
-    }
-
-    function GetAllStakedERC721(address _user)
-        external
-        view
-        returns (uint256[] memory tokenIds)
-    {
-        return stakers[_user].ownedTokens;
-    }
-
-    function GetAllStakedERC1155(address _user)
-        external
-        view
-        returns (uint256[] memory tokenIds)
-    {
-        return stakers[_user].ownedMultiTokens;
+        emit StakingUnlockUpdated(stakingUnlock);
     }
 
     function stakeERC721(uint256 tokenId) external whenNotPaused {
@@ -324,18 +300,10 @@ contract Vesting is Ownable, ERC721Holder, ReentrancyGuard, Pausable {
     }
 
     function _unstakeERC721(uint256 _tokenId) private nonReentrant {
-        // updateReward
         Staker storage staker = stakers[msg.sender];
         uint256 elapsedTime = block.timestamp -
             staker.token[_tokenId].timestamp;
 
-        // claimReward
-        if (elapsedTime > stakingMinimum && tokensClaimable == true) {
-            uint256 stakedPeriods = (elapsedTime) / stakingPeriod;
-            uint256 rewards = token * stakedPeriods;
-            rewardsToken.mint(msg.sender, rewards);
-            emit RewardPaid(msg.sender, rewards);
-        }
         // unstake
         delete staker.token[_tokenId];
         for (uint256 _j = 0; _j < staker.ownedTokens.length; _j++) {
@@ -350,6 +318,14 @@ contract Vesting is Ownable, ERC721Holder, ReentrancyGuard, Pausable {
         }
         land.safeTransferFrom(address(this), msg.sender, _tokenId);
         emit Unstaked721(msg.sender, _tokenId);
+
+        // claimReward
+        if (elapsedTime > stakingMinimum && tokensClaimable == true) {
+            uint256 stakedPeriods = (elapsedTime) / stakingPeriod;
+            uint256 rewards = token * stakedPeriods;
+            rewardsToken.mint(msg.sender, rewards);
+            emit RewardPaid(msg.sender, rewards);
+        }
     }
 
     function _unstakeERC1155(
@@ -357,25 +333,15 @@ contract Vesting is Ownable, ERC721Holder, ReentrancyGuard, Pausable {
         uint256 _index,
         uint256 _elapsedTime
     ) private nonReentrant {
-        // updateReward
         Staker storage staker = stakers[msg.sender];
         ItemInfo memory item = staker.multiToken[_tokenId][_index];
         uint16 tokenAmount = item.amount;
 
-        if (_elapsedTime > stakingMinimum && tokensClaimable == true) {
-            uint256 stakedPeriods = (block.timestamp - item.timestamp) /
-                stakingPeriod;
-            uint256 rewards = (item.amount * token * stakedPeriods);
-            rewardsToken.mint(msg.sender, rewards);
-            emit RewardPaid(msg.sender, rewards);
-        }
         // unstake
-        // remove from map of token => StakedTokenInfo[]
         staker.multiToken[_tokenId][_index] = staker.multiToken[_tokenId][
             staker.multiToken[_tokenId].length - 1
         ];
         staker.multiToken[_tokenId].pop();
-        // remove from array of staked tokens
         if (staker.multiToken[_tokenId].length == 0) {
             for (uint256 _j = 0; _j < staker.ownedMultiTokens.length; _j++) {
                 if (staker.ownedMultiTokens[_j] == _tokenId) {
@@ -387,7 +353,6 @@ contract Vesting is Ownable, ERC721Holder, ReentrancyGuard, Pausable {
                 }
             }
         }
-
         items.safeTransferFrom(
             address(this),
             msg.sender,
@@ -396,6 +361,15 @@ contract Vesting is Ownable, ERC721Holder, ReentrancyGuard, Pausable {
             ""
         );
         emit Unstaked1155(msg.sender, _tokenId, tokenAmount);
+
+        // claimReward
+        if (_elapsedTime > stakingMinimum && tokensClaimable == true) {
+            uint256 stakedPeriods = (block.timestamp - item.timestamp) /
+                stakingPeriod;
+            uint256 rewards = (item.amount * token * stakedPeriods);
+            rewardsToken.mint(msg.sender, rewards);
+            emit RewardPaid(msg.sender, rewards);
+        }
     }
 
     function _batchUnstakeERC1155(
@@ -455,6 +429,38 @@ contract Vesting is Ownable, ERC721Holder, ReentrancyGuard, Pausable {
             rewardsToken.mint(msg.sender, rewards);
             emit RewardPaid(msg.sender, rewards);
         }
+    }
+
+    function getStakedERC721(address _user, uint256 _tokenId)
+        external
+        view
+        returns (ItemInfo memory)
+    {
+        return stakers[_user].token[_tokenId];
+    }
+
+    function getStakedERC1155(address _user, uint256 _tokenId)
+        external
+        view
+        returns (ItemInfo[] memory)
+    {
+        return stakers[_user].multiToken[_tokenId];
+    }
+
+    function getAllStakedERC721(address _user)
+        external
+        view
+        returns (uint256[] memory tokenIds)
+    {
+        return stakers[_user].ownedTokens;
+    }
+
+    function getAllStakedERC1155(address _user)
+        external
+        view
+        returns (uint256[] memory tokenIds)
+    {
+        return stakers[_user].ownedMultiTokens;
     }
 
     // We need these functions to receive ERC1155 NFT

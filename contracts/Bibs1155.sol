@@ -29,12 +29,11 @@ contract Bibs1155 is Ownable, ERC1155 {
     Step public sellingStep;
 
     uint8 private constant NFT1 = 1;
-    uint8 private constant limitNFT1 = 125;
     uint16 public nextNFT;
-    uint16 public maxSupply = 6000;
-    uint32 public whitelistStartTime = 1652738400; // 17/05 à minuit
-    uint256 public whitelistSalePrice = 100;
-    uint256 public publicSalePrice = 150;
+    uint16 public constant maxSupply = 6000;
+    uint32 public constant whitelistStartTime = 1652738400; // 17/05 à minuit
+    uint256 public constant whitelistSalePrice = 100;
+    uint256 public constant publicSalePrice = 150;
 
     string public baseURI;
 
