@@ -4,7 +4,7 @@
 **Si vous souhaitez m'aider/encourager, n'hésitez pas à mettre une étoile à ce repo et suivre le profil, merci d'avance !**
 ----------------
 * Contract suite developed by me, which I hope will be useful for other developers  
-**If you want to help/encourage me, feel free to put a star to this repo and follow the profile, thanks in advance !**
+**If you want to help/encourage me, feel free to put a star to this repo and follow the profile, thanks very much !**
 
 ## Staking ERC20 DEFI
 * Réalisé à partir du [contrat de Synthetix](https://github.com/Synthetixio/synthetix/blob/develop/contracts/StakingRewards.sol)  

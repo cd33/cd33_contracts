@@ -37,13 +37,13 @@ contract StakingERC20 is Ownable, ReentrancyGuard {
     event RewardAdded(uint256 reward);
 
     /// @notice event emitted when a user has staked tokens.
-    event Staked(address owner, uint256 amount);
+    event Staked(address indexed owner, uint256 amount);
 
     /// @notice event emitted when a user has unstaked tokens.
-    event Unstaked(address owner, uint256 amount);
+    event Unstaked(address indexed owner, uint256 amount);
 
     /// @notice event emitted when a user has claimed his reward.
-    event RewardPaid(address owner, uint256 reward);
+    event RewardPaid(address indexed owner, uint256 reward);
 
     /**
      * @notice Constructor of the contract Staking.

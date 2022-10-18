@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.7;
 
-import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
@@ -14,9 +14,9 @@ interface IRewardToken is IERC20 {
 }
 
 contract Vesting is Ownable, ERC721Holder, ReentrancyGuard, Pausable {
-    IRewardToken public rewardsToken;
-    IERC721 public land;
-    IERC1155 public items;
+    IERC721 public immutable land;
+    IERC1155 public immutable items;
+    IRewardToken public immutable rewardsToken;
 
     uint256 public constant stakingPeriod = 1 seconds;
     uint256 public stakingMinimum = 0 days;
@@ -52,16 +52,16 @@ contract Vesting is Ownable, ERC721Holder, ReentrancyGuard, Pausable {
     mapping(address => Staker) public stakers;
 
     /// @notice event emitted when a user has staked a nft
-    event Staked721(address owner, uint256 id);
-    event Staked1155(address owner, uint256 id, uint16 amount);
+    event Staked721(address indexed owner, uint256 id);
+    event Staked1155(address indexed owner, uint256 id, uint16 amount);
     /// @notice event emitted when a user has staked a batch of nft
-    event StakedBatch1155(address owner, uint256[] ids, uint256[] amounts);
+    event StakedBatch1155(address indexed owner, uint256[] ids, uint256[] amounts);
 
     /// @notice event emitted when a user has unstaked a nft
-    event Unstaked721(address owner, uint256 id);
-    event Unstaked1155(address owner, uint256 id, uint16 amount);
+    event Unstaked721(address indexed owner, uint256 id);
+    event Unstaked1155(address indexed owner, uint256 id, uint16 amount);
     /// @notice event emitted when a user has unstaked a batch of nft
-    event UnstakedBatch1155(address owner, uint256[] ids, uint256[] amounts);
+    event UnstakedBatch1155(address indexed owner, uint256[] ids, uint256[] amounts);
 
     /// @notice event emitted when a user claims reward
     event RewardPaid(address indexed user, uint256 reward);

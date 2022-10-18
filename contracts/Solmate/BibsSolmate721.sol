@@ -16,7 +16,7 @@ contract BibsSolmate721 is ERC721, Ownable, ReentrancyGuard {
     using Strings for uint256;
 
     using SafeERC20 for IERC20;
-    IERC20 private usdt = IERC20(0x55d398326f99059fF775485246999027B3197955); // USDT sur la BSC
+    IERC20 private constant usdt = IERC20(0x55d398326f99059fF775485246999027B3197955); // USDT sur la BSC
     address private constant recipient =
         0xD9453F5E2696604703076835496F81c3753C3Bb3;
     AggregatorV3Interface internal priceFeed =
@@ -30,8 +30,14 @@ contract BibsSolmate721 is ERC721, Ownable, ReentrancyGuard {
 
     string public baseURI;
 
+    /// @notice event emitted when the pause is updated.
+    event PauseUpdated(bool notPaused);
+    
+    /// @notice event emitted when the sale price updated.
+    event PriceUpdated(uint16 salePrice);
+
     /// @notice event emitted when a new pool of NFT is ready to be minted.
-    event InitializedMint(uint256 _tokenId, uint256 limit, uint16 salePrice);
+    event InitializedMint(uint256 tokenId, uint256 limit, uint16 salePrice);
 
     /**
      * @notice Constructor of the contract ERC721.
@@ -95,6 +101,7 @@ contract BibsSolmate721 is ERC721, Ownable, ReentrancyGuard {
      */
     function setPause() external onlyOwner {
         notPaused = !notPaused;
+        emit PauseUpdated(notPaused);
     }
 
     /**
@@ -103,6 +110,7 @@ contract BibsSolmate721 is ERC721, Ownable, ReentrancyGuard {
      **/
     function setSalePrice(uint16 _newPrice) external onlyOwner {
         salePrice = _newPrice;
+        emit PriceUpdated(salePrice);
     }
 
     /**

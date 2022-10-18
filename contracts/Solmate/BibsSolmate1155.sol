@@ -47,7 +47,7 @@ contract BibsSolmate1155 is Ownable, ERC1155 {
     /**
      * @notice Emitted when the step changed.
      */
-    event StepChanged(uint8 _step);
+    event StepChanged(uint8 step);
 
     /**
      * @notice Constructor of the contract ERC1155.
@@ -80,7 +80,7 @@ contract BibsSolmate1155 is Ownable, ERC1155 {
      * @notice Change the base URI.
      * @param _newBaseURI New base URI.
      **/
-    function setBaseUri(string memory _newBaseURI) external onlyOwner {
+    function setBaseUri(string calldata _newBaseURI) external onlyOwner {
         baseURI = _newBaseURI;
     }
 
@@ -211,7 +211,7 @@ contract BibsSolmate1155 is Ownable, ERC1155 {
         address _to,
         uint16 _tokenId,
         uint16 _quantity,
-        string memory _name
+        string calldata _name
     ) external onlyOwner callerIsUser {
         require(nextNFT + _quantity <= maxSupply, "Sold out");
         require(_tokenId > 0 && _tokenId < 2, "NFT doesn't exist");
