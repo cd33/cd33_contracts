@@ -1,26 +1,22 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.7;
 
-import "./ERC721A.sol";
-import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
+import "erc721a/contracts/ERC721A.sol";
+import "@openzeppelin/contracts/token/common/ERC2981.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
-import "@openzeppelin/contracts/interfaces/IERC2981.sol";
+import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 /// @title Bibs NFTs 721A collection
 /// @author cd33
-contract Bibs721A is Ownable, ERC721A, IERC2981 {
-
-    using Strings for uint;
-
-    address private constant recipient = 0xD9453F5E2696604703076835496F81c3753C3Bb3;
-
+contract Bibs721A is ERC721A, ERC2981, Ownable {
     enum Step {
         Before,
         WhitelistSale,
         PublicSale
     }
     Step public sellingStep;
+
+    address private constant recipient = 0xD9453F5E2696604703076835496F81c3753C3Bb3;
 
     uint8 public constant whitelistLimitBalance = 2;
     uint16 public constant MAX_SUPPLY = 6530;
@@ -80,9 +76,20 @@ contract Bibs721A is Ownable, ERC721A, IERC2981 {
      * @param _tokenId Id of the token.
      * @return string Token's metadatas URI.
      */
-    function tokenURI(uint _tokenId) public view virtual override returns(string memory) {
+    function tokenURI(uint256 _tokenId)
+        public
+        view
+        virtual
+        override
+        returns (string memory)
+    {
         require(_exists(_tokenId), "NFT doesn't exist");
-        return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, _tokenId.toString(), ".json")) : "";
+        return
+            bytes(baseURI).length > 0
+                ? string(
+                    abi.encodePacked(baseURI, _toString(_tokenId), ".json")
+                )
+                : "";
     }
 
     // MINT
@@ -91,11 +98,22 @@ contract Bibs721A is Ownable, ERC721A, IERC2981 {
      * @param _quantity Number of tokens to mint.
      * @param _proof Merkle Proof.
      */
-    function whitelistSaleMint(uint8 _quantity, bytes32[] calldata _proof) external payable callerIsUser { // optionnel: add a quantity
+    function whitelistSaleMint(uint8 _quantity, bytes32[] calldata _proof)
+        external
+        payable
+        callerIsUser
+    {
         require(sellingStep == Step.WhitelistSale, "Whitelist sale not active");
         require(_isWhiteListed(msg.sender, _proof), "Not whitelisted");
-        require(amountWhitelistSaleNftPerWallet[msg.sender] + _quantity <= whitelistLimitBalance, "Limited number per wallet");
-        require(msg.value >= _quantity * whitelistSalePrice, "Not enough funds");
+        require(
+            amountWhitelistSaleNftPerWallet[msg.sender] + _quantity <=
+                whitelistLimitBalance,
+            "Limited number per wallet"
+        );
+        require(
+            msg.value >= _quantity * whitelistSalePrice,
+            "Not enough funds"
+        );
         payable(recipient).transfer(address(this).balance);
         amountWhitelistSaleNftPerWallet[msg.sender] += _quantity;
         _safeMint(msg.sender, _quantity);
@@ -105,7 +123,7 @@ contract Bibs721A is Ownable, ERC721A, IERC2981 {
      * @notice Mint NFTs during the public sale.
      * @param _quantity Number of tokens to mint.
      */
-    function publicSaleMint(uint8 _quantity) external payable callerIsUser {
+    function publicSaleMint(uint256 _quantity) external payable callerIsUser {
         require(sellingStep == Step.PublicSale, "Public sale not active");
         require(totalSupply() + _quantity <= MAX_SUPPLY, "Sold out");
         require(msg.value >= _quantity * publicSalePrice, "Not enough funds");
@@ -118,7 +136,7 @@ contract Bibs721A is Ownable, ERC721A, IERC2981 {
      * @param _to Receiving address.
      * @param _quantity Number of tokens to mint.
      */
-    function gift(address _to, uint8 _quantity) external onlyOwner {
+    function gift(address _to, uint256 _quantity) external onlyOwner {
         require(totalSupply() + _quantity <= MAX_SUPPLY, "Sold out");
         _safeMint(_to, _quantity);
     }
@@ -138,7 +156,11 @@ contract Bibs721A is Ownable, ERC721A, IERC2981 {
      * @param _proof Merkle Proof.
      * @return bool Account whitelisted or not.
      **/
-    function _isWhiteListed(address _account, bytes32[] calldata _proof) internal view returns(bool) {
+    function _isWhiteListed(address _account, bytes32[] calldata _proof)
+        private
+        view
+        returns (bool)
+    {
         return _verify(_leafHash(_account), _proof);
     }
 
@@ -147,36 +169,39 @@ contract Bibs721A is Ownable, ERC721A, IERC2981 {
      * @param _account Account to hash.
      * @return bytes32 Account hashed.
      **/
-    function _leafHash(address _account) internal pure returns(bytes32) {
+    function _leafHash(address _account) private pure returns (bytes32) {
         return keccak256(abi.encodePacked(_account));
     }
 
-    /** 
+    /**
      * @notice Returns true if a leaf can be proven to be part of a Merkle tree defined by root.
      * @param _leaf Leaf.
      * @param _proof Merkle Proof.
      * @return bool Be part of the Merkle tree or not.
      **/
-    function _verify(bytes32 _leaf, bytes32[] memory _proof) internal view returns(bool) {
+    function _verify(bytes32 _leaf, bytes32[] memory _proof)
+        private
+        view
+        returns (bool)
+    {
         return MerkleProof.verify(_proof, merkleRoot, _leaf);
     }
 
     // ROYALTIES
-    /** 
-     * @notice EIP2981 standard royalties return.
-     * @dev Returns how much royalty is owed and to whom.
-     * @param _tokenId Id of the token.
-     * @param _salePrice Price of the token.
-     * @return receiver Address of receiver.
-     * @return royaltyAmount Amount of royalty.
+    /**
+     * @notice EIP2981 set royalties.
+     * @dev Changes the receiver and the percentage of the royalties.
+     * @param _receiver Address of receiver.
+     * @param _feeNumerator Percentage of royalty.
      **/
-    function royaltyInfo(uint256 _tokenId, uint256 _salePrice) external view override
-        returns (address receiver, uint256 royaltyAmount)
+    function setDefaultRoyalty(address _receiver, uint96 _feeNumerator)
+        external
+        onlyOwner
     {
-        return (address(this), (_salePrice * 700) / 10000);
+        _setDefaultRoyalty(_receiver, _feeNumerator);
     }
 
-    /** 
+    /**
      * @notice Returns true if this contract implements the interface IERC2981.
      * @param interfaceId Id of the interface.
      * @return bool Implements IERC2981 or not.
@@ -185,13 +210,12 @@ contract Bibs721A is Ownable, ERC721A, IERC2981 {
         public
         view
         virtual
-        override(ERC721A, IERC165)
+        override(ERC721A, ERC2981)
         returns (bool)
     {
-        return (
-            interfaceId == type(IERC2981).interfaceId ||
-            super.supportsInterface(interfaceId)
-        );
+        return
+            ERC721A.supportsInterface(interfaceId) ||
+            ERC2981.supportsInterface(interfaceId);
     }
 
     /**

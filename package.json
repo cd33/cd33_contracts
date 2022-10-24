@@ -8,6 +8,10 @@
     "chai": "^4.3.6",
     "dotenv": "^16.0.3",
     "hardhat-gas-reporter": "^1.0.8",
-    "prettier-plugin-solidity": "^1.0.0-beta.24"
+    "prettier-plugin-solidity": "^1.0.0-beta.24",
+    "solmate": "^6.6.1"
+  },
+  "devDependencies": {
+    "erc721a": "^4.2.3"
   }
 }
